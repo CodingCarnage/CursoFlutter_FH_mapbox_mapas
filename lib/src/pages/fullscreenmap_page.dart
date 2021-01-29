@@ -16,7 +16,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
   static const String streetsPurpleStyle = 'mapbox://styles/codingcarnage/ckkhlm1cv00ck17mq16y6xex2';
   static const String monochromeStyle = 'mapbox://styles/codingcarnage/ckkhljrrc00b117mn3yksy7cg';
 
-  String selectedStyle = monochromeStyle;
+  String selectedStyle = streetsPurpleStyle;
 
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
@@ -26,22 +26,40 @@ class _FullScreenMapState extends State<FullScreenMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: createMabboxMap(),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: Icon(Icons.color_lens),
-            onPressed: () {
-              if (selectedStyle == monochromeStyle) {
-                selectedStyle = streetsPurpleStyle;
-              } else {
-                selectedStyle = monochromeStyle;
-              }
-              setState(() {});
-            },
-          ),
-        ],
-      ),
+      floatingActionButton: floatingButtons(),
+    );
+  }
+
+  Column floatingButtons() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        FloatingActionButton(
+          child: Icon(Icons.zoom_in),
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomIn());
+          },
+        ),
+        const SizedBox(height: 10.0),
+        FloatingActionButton(
+          child: Icon(Icons.zoom_out),
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomOut());
+          },
+        ),
+        const SizedBox(height: 10.0),
+        FloatingActionButton(
+          child: Icon(Icons.color_lens),
+          onPressed: () {
+            if (selectedStyle == monochromeStyle) {
+              selectedStyle = streetsPurpleStyle;
+            } else {
+              selectedStyle = monochromeStyle;
+            }
+            setState(() {});
+          },
+        ),
+      ],
     );
   }
 
