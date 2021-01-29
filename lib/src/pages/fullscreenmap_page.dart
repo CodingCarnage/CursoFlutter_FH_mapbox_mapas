@@ -11,6 +11,12 @@ class FullScreenMap extends StatefulWidget {
 
 class _FullScreenMapState extends State<FullScreenMap> {
   MapboxMapController mapController;
+  static const String accessToken = 'pk.eyJ1IjoiY29kaW5nY2FybmFnZSIsImEiOiJja2tlZzJuYXEwY25iMnhxcnl3YzRnM2plIn0.eSyocRuYbhnY0Pj4Q5M8iQ';
+  static const LatLng center = LatLng(37.810575, -122.477174);
+  static const String streetsPurpleStyle = 'mapbox://styles/codingcarnage/ckkhlm1cv00ck17mq16y6xex2';
+  static const String monochromeStyle = 'mapbox://styles/codingcarnage/ckkhljrrc00b117mn3yksy7cg';
+
+  String selectedStyle = monochromeStyle;
 
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
@@ -19,12 +25,36 @@ class _FullScreenMapState extends State<FullScreenMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MapboxMap(
-        accessToken: 'pk.eyJ1IjoiY29kaW5nY2FybmFnZSIsImEiOiJja2tlZzJuYXEwY25iMnhxcnl3YzRnM2plIn0.eSyocRuYbhnY0Pj4Q5M8iQ',
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: const CameraPosition(target: LatLng(26.925738, -101.447115)),
-        onStyleLoadedCallback: onStyleLoadedCallback,
+      body: createMabboxMap(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            child: Icon(Icons.color_lens),
+            onPressed: () {
+              if (selectedStyle == monochromeStyle) {
+                selectedStyle = streetsPurpleStyle;
+              } else {
+                selectedStyle = monochromeStyle;
+              }
+              setState(() {});
+            },
+          ),
+        ],
       ),
+    );
+  }
+
+  MapboxMap createMabboxMap() {
+    return MapboxMap(
+      accessToken: accessToken,
+      onMapCreated: _onMapCreated,
+      styleString: selectedStyle,
+      initialCameraPosition: const CameraPosition(
+        target: center,
+        zoom: 14,
+      ),
+      onStyleLoadedCallback: onStyleLoadedCallback,
     );
   }
 
