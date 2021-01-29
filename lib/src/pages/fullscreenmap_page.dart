@@ -39,10 +39,16 @@ class _FullScreenMapState extends State<FullScreenMap> {
           onPressed: () {
             mapController.addSymbol(SymbolOptions(
               geometry: center,
-              iconImage: 'attraction-15',
-              iconSize: 2,
-              textField: 'Montaña creada aqui',
-              textOffset: Offset(0, 3)
+              iconImage: 'airport-15',
+              fontNames: ['DIN Offc Pro Bold', 'Arial Unicode MS Regular'],
+              textField: 'Airport',
+              textSize: 12.5,
+              textOffset: Offset(0, 0.8),
+              textAnchor: 'top',
+              textColor: '#000000',
+              textHaloBlur: 1,
+              textHaloColor: '#ffffff',
+              textHaloWidth: 0.8,
             ));
           },
         ),
