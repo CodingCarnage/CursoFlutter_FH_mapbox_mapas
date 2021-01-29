@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:http/http.dart' as http;
 
 class FullScreenMap extends StatefulWidget {
   const FullScreenMap({Key key}) : super(key: key);
@@ -22,6 +26,23 @@ class _FullScreenMapState extends State<FullScreenMap> {
     mapController = controller;
   }
 
+  void _onStyleLoaded() {
+    addImageFromAsset("assetImage", "assets/symbols/custom-icon.png");
+    addImageFromUrl("networkImage", "https://via.placeholder.com/50");
+  }
+
+  Future<void> addImageFromAsset(String name, String assetName) async {
+    final ByteData bytes = await rootBundle.load(assetName);
+    final Uint8List list = bytes.buffer.asUint8List();
+    return mapController.addImage(name, list);
+  }
+
+  /// Adds a network image to the currently displayed style
+  Future<void> addImageFromUrl(String name, String url) async {
+    http.Response response = await http.get(url);
+    return mapController.addImage(name, response.bodyBytes);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +60,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
           onPressed: () {
             mapController.addSymbol(SymbolOptions(
               geometry: center,
-              iconImage: 'airport-15',
+              iconImage: 'networkImage',
               fontNames: ['DIN Offc Pro Bold', 'Arial Unicode MS Regular'],
               textField: 'Airport',
               textSize: 12.5,
@@ -95,5 +116,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
     );
   }
 
-  void onStyleLoadedCallback() {}
+  void onStyleLoadedCallback() {
+    _onStyleLoaded();
+  }
 }
